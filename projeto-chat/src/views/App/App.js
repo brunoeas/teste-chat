@@ -11,7 +11,7 @@ import { VIEW_LOGIN_KEY, VIEW_CHAT_KEY } from '../../viewKeys';
  * @returns Componente React "pai" do projeto
  */
 const App = props => {
-  const [view, setView] = useState(VIEW_LOGIN_KEY);
+  const [view, setView] = useState(VIEW_CHAT_KEY);
 
   let viewSelected;
   switch (view) {
