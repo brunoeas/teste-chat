@@ -29,7 +29,7 @@ const styles = () => ({
     marginBottom: 30
   },
   text: {
-    fontSize: 18,
+    fontSize: '1.28rem',
     textAlign: 'center'
   },
   containerButton: {
@@ -79,12 +79,17 @@ const Login = props => {
           <Grid item xs />
 
           <Grid item xs={8}>
-            <TextField
-              className={classes.input}
-              value={nmUsuario}
-              onChange={handleChangeInput}
-              label='Nome do usuário...'
-            />
+            <form onSubmit={() => onChangeView(VIEW_CHAT_KEY)} autoComplete='off'>
+              <TextField
+                className={classes.input}
+                value={nmUsuario}
+                onChange={handleChangeInput}
+                label='Nome do usuário...'
+                inputProps={{ maxLenght: 100, autoComplete: 'off' }}
+                autoComplete='off'
+                type='text'
+              />
+            </form>
 
             <div className={classes.containerButton}>
               <Button
