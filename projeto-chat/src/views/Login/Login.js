@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { VIEW_CHAT_KEY } from '../../viewKeys';
+import { login } from '../../resources/usuario';
 
 const styles = () => ({
   root: {
@@ -57,6 +58,12 @@ const Login = props => {
 
   const disableButton = !nmUsuario || nmUsuario.trim().length <= 3;
 
+  function handleSubmit() {
+    if (disableButton) return;
+
+    login({ nmUsuario }, () => onChangeView(VIEW_CHAT_KEY));
+  }
+
   /**
    * Componente de manipulação do evento onChange do Input
    *
@@ -85,7 +92,7 @@ const Login = props => {
                 value={nmUsuario}
                 onChange={handleChangeInput}
                 label='Nome do usuário...'
-                inputProps={{ maxLenght: 100, autoComplete: 'off' }}
+                inputProps={{ maxLength: 100, autoComplete: 'off' }}
                 autoComplete='off'
                 type='text'
               />
@@ -95,7 +102,7 @@ const Login = props => {
               <Button
                 color='primary'
                 className={classes.button}
-                onClick={() => onChangeView(VIEW_CHAT_KEY)}
+                onClick={() => handleSubmit()}
                 disabled={disableButton}
               >
                 Login
