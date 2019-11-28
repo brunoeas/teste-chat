@@ -4,7 +4,7 @@ import Chat from '../Chat/Chat';
 import { VIEW_LOGIN_KEY, VIEW_CHAT_KEY } from '../../viewKeys';
 
 /**
- * Componente principal do projeto
+ * Componente principal do projeto que controla as views
  *
  * @author Bruno Eduardo
  * @param {Object} props - props
