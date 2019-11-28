@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { VIEW_CHAT_KEY } from '../../viewKeys';
 import { login } from '../../resources/usuario';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = () => ({
   root: {
@@ -55,17 +56,31 @@ const Login = props => {
   const { classes, onChangeView } = props;
 
   const [nmUsuario, setNmUsuario] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const disableButton = !nmUsuario || nmUsuario.trim().length <= 3;
+  const inputIsInvalid = !nmUsuario || nmUsuario.trim().length <= 3;
 
+  useEffect(() => {
+    const userLogged = localStorage.getItem('user_logged');
+    if (userLogged) {
+      onChangeView(VIEW_CHAT_KEY);
+    }
+  });
+
+  /**
+   * Manipulação do submit do Input
+   *
+   * @returns Não faz nada caso o Input não seja válido
+   */
   function handleSubmit() {
-    if (disableButton) return;
+    if (inputIsInvalid) return;
 
-    login({ nmUsuario }, () => onChangeView(VIEW_CHAT_KEY));
+    setLoading(true);
+    login({ nmUsuario }).then(() => onChangeView(VIEW_CHAT_KEY));
   }
 
   /**
-   * Componente de manipulação do evento onChange do Input
+   * Manipulação do evento onChange do Input
    *
    * @param {*} e - Change event
    */
@@ -86,7 +101,7 @@ const Login = props => {
           <Grid item xs />
 
           <Grid item xs={8}>
-            <form onSubmit={() => onChangeView(VIEW_CHAT_KEY)} autoComplete='off'>
+            <form autoComplete='off'>
               <TextField
                 className={classes.input}
                 value={nmUsuario}
@@ -103,9 +118,9 @@ const Login = props => {
                 color='primary'
                 className={classes.button}
                 onClick={() => handleSubmit()}
-                disabled={disableButton}
+                disabled={inputIsInvalid || loading}
               >
-                Login
+                {loading ? <CircularProgress /> : 'Login'}
               </Button>
             </div>
           </Grid>

@@ -6,6 +6,7 @@ import Mensagem from '../../components/Mensagem/Mensagem';
 import moment from 'moment';
 import SendIcon from '@material-ui/icons/Send';
 import IconButton from '@material-ui/core/IconButton';
+import { onNewUserLogIn } from '../../resources/mensagem';
 
 const styles = () => ({
   root: {
@@ -56,311 +57,34 @@ const styles = () => ({
 
 const dataMessages = [
   {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
+    tpMensagem: 1,
+    usuario: { nmUsuario: 'Bruno Eduardo' }
+  },
+  {
+    tpMensagem: 0,
+    usuario: { idUsuario: 1, nmUsuario: 'Bruno Eduardo' },
     text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
+    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ')
   },
   {
-    usuario: { nmUsuario: 'Juliana Santos' },
+    tpMensagem: 0,
+    usuario: { idUsuario: 2, nmUsuario: 'Juliana Santos' },
     text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
-  },
-  {
-    usuario: { nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: true
-  },
-  {
-    usuario: { nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ'),
-    loggedUser: false
+    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ')
   }
 ];
 
+/**
+ * Componente que representa o Chat
+ *
+ * @param {Object} props - props
+ * @returns Componente React do Chat
+ */
 const Chat = props => {
-  const { classes, onChangeView } = props;
+  const { classes, onChangeView } = props; // TODO: implementar logoff
 
   const [valueInput, setValueInput] = useState('');
+  const [mensagens, setMensagens] = useState(dataMessages || []);
 
   const inputIsValid = !!valueInput && !!valueInput.trim() && valueInput.trim().length >= 1;
 
@@ -368,6 +92,12 @@ const Chat = props => {
   useEffect(() => {
     const element = document.getElementById(idContainerScrollMessages);
     element && element.scrollTo(0, element.scrollHeight);
+  });
+
+  onNewUserLogIn().then(usuario => {
+    const auxMensagens = [...mensagens];
+    auxMensagens.push({ tpMensagem: 1, usuario });
+    setMensagens(auxMensagens);
   });
 
   /**
@@ -400,14 +130,14 @@ const Chat = props => {
     <div className={classes.root}>
       <div className={classes.containerMessages}>
         <div id={idContainerScrollMessages} className={classes.containerScrollMessages}>
-          {dataMessages.map((msg, i) => (
+          {mensagens.map((msg, i) => (
             <Mensagem key={i} msg={msg} />
           ))}
         </div>
       </div>
 
       <div className={classes.containerInput}>
-        <form onSubmit={sendNewMessage} autoComplete='off'>
+        <form autoComplete='off'>
           <InputBase
             className={classes.input}
             placeholder='Digite sua mensagem...'
