@@ -35,6 +35,7 @@ const styles = () => ({
 
 /**
  * Componente que representa a Mensagem
+ * tpMensagem: 0 - mensagem de um Usuário; 1 - mensagem de login de um Usuário;
  *
  * @param {Object} props - props
  * @returns Componente React de Mensagem
