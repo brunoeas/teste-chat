@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+import { getUserLogged } from '../../utils/usuario';
 
 const styles = () => ({
   root: {
@@ -37,12 +38,13 @@ const styles = () => ({
  * Componente que representa a Mensagem
  * tpMensagem: 0 - mensagem de um Usuário; 1 - mensagem de login de um Usuário;
  *
+ * @author Bruno Eduardo
  * @param {Object} props - props
  * @returns Componente React de Mensagem
  */
 const Mensagem = props => {
   const { classes } = props;
-  const { text, dhEnvio, usuario, tpMensagem } = props.msg;
+  const { dsText, dhEnvio, usuario, tpMensagem } = props.mensagem;
   const dhEnvioFormatado = moment(dhEnvio).format('DD/MM/YYYY HH:mm');
 
   const isFromLoggedUser = usuario.idUsuario === getUserLogged().idUsuario;
@@ -77,16 +79,12 @@ const Mensagem = props => {
           <div className={classes.nomeUsuario}>{usuario.nmUsuario}</div>
         )}
 
-        {tpMensagem === 0 ? <div>{text}</div> : `${usuario.nmUsuario} entrou no chat.`}
+        {tpMensagem === 0 ? <div>{dsText}</div> : `${usuario.nmUsuario} entrou no chat.`}
 
         {tpMensagem === 0 && <div className={classes.textDataEnvio}>{dhEnvioFormatado}</div>}
       </div>
     </div>
   );
 };
-
-function getUserLogged() {
-  return JSON.stringify(localStorage.getItem('user_logged')) || {};
-}
 
 export default withStyles(styles)(Mensagem);
