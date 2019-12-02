@@ -6,7 +6,8 @@ import Mensagem from '../../components/Mensagem/Mensagem';
 import moment from 'moment';
 import SendIcon from '@material-ui/icons/Send';
 import IconButton from '@material-ui/core/IconButton';
-import { onNewUserLogIn } from '../../resources/mensagem';
+import { onNewUserLogIn, onNewMessageReceived, sendNewMessage } from '../../resources/mensagem';
+import { getUserLogged } from '../../utils/usuario';
 
 const styles = () => ({
   root: {
@@ -57,10 +58,6 @@ const styles = () => ({
 
 const dataMessages = [
   {
-    tpMensagem: 1,
-    usuario: { nmUsuario: 'Bruno Eduardo' }
-  },
-  {
     tpMensagem: 0,
     usuario: { idUsuario: 1, nmUsuario: 'Bruno Eduardo' },
     text: 'Pão com sardinha é muito bom!',
@@ -100,6 +97,13 @@ const Chat = props => {
     setMensagens(auxMensagens);
   });
 
+  onNewMessageReceived().then(mensagem => {
+    const auxMensagens = [...mensagens];
+    console.log('new message received ', mensagem);
+    auxMensagens.push({ tpMensagem: 0, ...mensagem });
+    setMensagens(auxMensagens);
+  });
+
   /**
    * Manipula o evento de mudança do Input
    *
@@ -107,7 +111,7 @@ const Chat = props => {
    */
   function handleChangeInput(e) {
     const value = e.target.value || '';
-    setValueInput(value.trim());
+    setValueInput(value);
   }
 
   /**
@@ -116,22 +120,29 @@ const Chat = props => {
    * @param {*} e - Keydown event
    */
   function handleKeyDownInput(e) {
-    if (e.keyCode === 13 && !e.shiftKey) {
-      sendNewMessage();
+    if (e.keyCode === 13 && !e.shiftKey && inputIsValid) {
+      sendMessage();
       e.preventDefault();
       return false;
     }
     return true;
   }
 
-  function sendNewMessage() {}
+  /**
+   * Envia uma nova Mensagem
+   */
+  function sendMessage() {
+    sendNewMessage({ dsText: valueInput.trim(), usuario: getUserLogged() }).then(() =>
+      setValueInput('')
+    );
+  }
 
   return (
     <div className={classes.root}>
       <div className={classes.containerMessages}>
         <div id={idContainerScrollMessages} className={classes.containerScrollMessages}>
           {mensagens.map((msg, i) => (
-            <Mensagem key={i} msg={msg} />
+            <Mensagem key={i} mensagem={msg} />
           ))}
         </div>
       </div>
@@ -151,7 +162,7 @@ const Chat = props => {
             inputProps={{ 'aria-label': 'naked', autoComplete: 'off' }}
           />
 
-          <IconButton className={classes.iconSend} disabled={!inputIsValid} onClick={sendNewMessage}>
+          <IconButton className={classes.iconSend} disabled={!inputIsValid} onClick={sendMessage}>
             <SendIcon color='inherit' fontSize='large' />
           </IconButton>
         </form>

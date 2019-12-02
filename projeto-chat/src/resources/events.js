@@ -6,7 +6,8 @@ const events = {
   USER_LOGGED_IN: 'userLoggedIn',
   USER_LOGGED_OFF: 'userLoggedOff',
   USER_IS_TYPING: 'userIsTyping',
-  NEW_MESSAGE: 'newMessage',
+  NEW_MESSAGE_SENDED: 'newMessageSended',
+  NEW_MESSAGE_RECEIVED: 'newMessageReceived',
   ERROR: 'Error',
   RESPONSE: 'Response'
 };

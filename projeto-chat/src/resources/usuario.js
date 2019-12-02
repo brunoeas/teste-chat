@@ -1,5 +1,6 @@
 import { socket } from './serverConnection';
 import events from './events';
+import { setUsuarioLogado } from '../utils/usuario';
 
 const { USER_LOGGED_IN, ERROR, RESPONSE } = events;
 
@@ -12,7 +13,7 @@ const { USER_LOGGED_IN, ERROR, RESPONSE } = events;
 async function login(usuario) {
   return new Promise((resolve, reject) => {
     socket.on(RESPONSE, newUser => {
-      localStorage.setItem('user_logged', JSON.stringify(newUser));
+      setUsuarioLogado(newUser);
       resolve();
     });
 
