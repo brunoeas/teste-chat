@@ -1,26 +1,36 @@
-import { socket } from './serverConnection';
-import events from './events';
-import { setUsuarioLogado } from '../utils/usuario';
-
-const { USER_LOGGED_IN, ERROR, RESPONSE } = events;
+import { URL_API } from './serverConnection';
+import axios from 'axios';
 
 /**
  * Cria um Usuário e faz login com ele
  *
- * @param {Object} usuario - Usuário que vai ser criado
- * @returns {Promise<void>} Uma Promise
+ * @author Bruno Eduardo
+ * @param {Usuario} usuario - Usuário que vai ser criado
+ * @returns {Promise<Usuario>} Uma Promise com os dados novos do Usuário
  */
 async function login(usuario) {
-  return new Promise((resolve, reject) => {
-    socket.on(RESPONSE, newUser => {
-      setUsuarioLogado(newUser);
-      resolve();
-    });
-
-    socket.on(ERROR, reject);
-
-    socket.emit(USER_LOGGED_IN, usuario);
-  });
+  return await axios.post(`${URL_API}/login`, usuario);
 }
 
-export { login };
+/**
+ * Deleta e desloga o Usuário
+ *
+ * @author Bruno Eduardo
+ * @param {Number} id - ID do Usuário
+ * @returns {Promise<void>} - Uma Promise void
+ */
+async function logoff(id) {
+  return await axios.delete(`${URL_API}/logoff/${id}`);
+}
+
+/**
+ * Retorna um Usuário pelo ID
+ *
+ * @param {Number} id - ID do Usuário
+ * @returns {Promise<Usuario>} Uma Promise com o Usuário
+ */
+async function findUsuarioById(id) {
+  return await axios.get(`${URL_API}/usuario/${id}`);
+}
+
+export { login, findUsuarioById, logoff };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import { VIEW_CHAT_KEY } from '../../viewKeys';
 import { login } from '../../resources/usuario';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { setUsuarioLogado } from '../../utils/usuario';
 
 const styles = () => ({
   root: {
@@ -50,7 +51,7 @@ const styles = () => ({
  *
  * @author Bruno Eduardo
  * @param {Object} props - props
- * @returns Componente React do login
+ * @returns Componente React do Login
  */
 const Login = props => {
   const { classes, onChangeView } = props;
@@ -59,34 +60,6 @@ const Login = props => {
   const [loading, setLoading] = useState(false);
 
   const inputIsInvalid = !nmUsuario || nmUsuario.trim().length <= 3;
-
-  useEffect(() => {
-    const userLogged = localStorage.getItem('user_logged');
-    if (userLogged) {
-      onChangeView(VIEW_CHAT_KEY);
-    }
-  });
-
-  /**
-   * Manipulação do submit do Input
-   *
-   * @returns Não faz nada caso o Input não seja válido
-   */
-  function handleSubmit() {
-    if (inputIsInvalid) return;
-
-    setLoading(true);
-    login({ nmUsuario }).then(() => onChangeView(VIEW_CHAT_KEY));
-  }
-
-  /**
-   * Manipulação do evento onChange do Input
-   *
-   * @param {*} e - Change event
-   */
-  function handleChangeInput(e) {
-    setNmUsuario(e.target.value);
-  }
 
   return (
     <div className={classes.root}>
@@ -106,6 +79,7 @@ const Login = props => {
                 className={classes.input}
                 value={nmUsuario}
                 onChange={handleChangeInput}
+                onKeyDown={handleKeyDownInput}
                 label='Nome do usuário...'
                 inputProps={{ maxLength: 100, autoComplete: 'off' }}
                 autoComplete='off'
@@ -117,7 +91,7 @@ const Login = props => {
               <Button
                 color='primary'
                 className={classes.button}
-                onClick={() => handleSubmit()}
+                onClick={handleSubmit}
                 disabled={inputIsInvalid || loading}
               >
                 {loading ? <CircularProgress /> : 'Login'}
@@ -130,6 +104,45 @@ const Login = props => {
       </Paper>
     </div>
   );
+
+  /**
+   * Manipulação do submit do Input
+   *
+   * @returns Não faz nada caso o Input não seja válido
+   */
+  function handleSubmit() {
+    if (inputIsInvalid) return;
+
+    setLoading(true);
+    login({ nmUsuario }).then(res => {
+      setUsuarioLogado(res.data);
+      onChangeView(VIEW_CHAT_KEY);
+    });
+  }
+
+  /**
+   * Manipula o evento ao pressionar uma tecla
+   *
+   * @param {*} e - Keydown event
+   * @returns {Boolean} true - se a tecla apertada dor o "Enter", o "Shift" não está pressionado e o Input é válido; senão, false;
+   */
+  function handleKeyDownInput(e) {
+    if (e.keyCode === 13 && !e.shiftKey && !inputIsInvalid) {
+      handleSubmit();
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Manipulação do evento onChange do Input
+   *
+   * @param {*} e - Change event
+   */
+  function handleChangeInput(e) {
+    setNmUsuario(e.target.value);
+  }
 };
 
 export default withStyles(styles)(Login);

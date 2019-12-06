@@ -8,8 +8,7 @@ const events = {
   USER_IS_TYPING: 'userIsTyping',
   NEW_MESSAGE_SENDED: 'newMessageSended',
   NEW_MESSAGE_RECEIVED: 'newMessageReceived',
-  ERROR: 'Error',
-  RESPONSE: 'Response'
+  ALL_MESSAGES_AFTER_DATE: 'allMessagesAfterDate'
 };
 
 export default events;
