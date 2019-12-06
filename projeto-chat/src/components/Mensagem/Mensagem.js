@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-import { getUserLogged } from '../../utils/usuario';
+import { getUsuarioLogado } from '../../utils/usuario';
 
 const styles = () => ({
   root: {
@@ -44,47 +44,48 @@ const styles = () => ({
  */
 const Mensagem = props => {
   const { classes } = props;
-  const { dsText, dhEnvio, usuario, tpMensagem } = props.mensagem;
-  const dhEnvioFormatado = moment(dhEnvio).format('DD/MM/YYYY HH:mm');
+  const { dsText, dhEnviado, usuario, tpMensagem } = props.mensagem;
 
-  const isFromLoggedUser = usuario.idUsuario === getUserLogged().idUsuario;
-
-  let justify;
+  let dynamicStyles = {};
   if (tpMensagem === 0) {
-    justify = isFromLoggedUser ? 'flex-end' : 'flex-start';
+    dynamicStyles = {
+      root: { justifyContent: isFromLoggedUser() ? 'flex-end' : 'flex-start' },
+      container: isFromLoggedUser()
+        ? { borderTopRightRadius: 0, backgroundColor: '#DCF8C6' }
+        : { borderTopLeftRadius: 0, backgroundColor: '#FFF' }
+    };
   } else {
-    justify = 'center';
+    dynamicStyles = {
+      root: { justifyContent: 'center' },
+      container: { backgroundColor: 'rgba(0,0,0,0.8)', color: '#FFF' }
+    };
   }
 
-  let containerStyle;
-  if (tpMensagem === 0) {
-    containerStyle = isFromLoggedUser
-      ? { borderTopRightRadius: 0, backgroundColor: '#DCF8C6' }
-      : { borderTopLeftRadius: 0, backgroundColor: '#FFF' };
-  } else {
-    containerStyle = { backgroundColor: 'rgba(0,0,0,0.8)', color: '#FFF' };
-  }
-
-  const dynamicStyles = {
-    root: {
-      justifyContent: justify
-    },
-    container: containerStyle
-  };
+  const dhEnvioFormatado = moment(dhEnviado).format('DD/MM/YYYY HH:mm');
 
   return (
     <div className={classes.root} style={dynamicStyles.root}>
       <div className={classes.container} style={dynamicStyles.container}>
-        {!isFromLoggedUser && tpMensagem === 0 && (
+        {!isFromLoggedUser() && tpMensagem === 0 && (
           <div className={classes.nomeUsuario}>{usuario.nmUsuario}</div>
         )}
 
-        {tpMensagem === 0 ? <div>{dsText}</div> : `${usuario.nmUsuario} entrou no chat.`}
+        <div>{dsText}</div>
 
         {tpMensagem === 0 && <div className={classes.textDataEnvio}>{dhEnvioFormatado}</div>}
       </div>
     </div>
   );
+
+  /**
+   * Valida se a mensagem é do Usuário logado
+   *
+   * @returns {Boolean} true - se a Mensagem for do Usuário logado; false - se não for do Usuário logado;
+   */
+  function isFromLoggedUser() {
+    const userLogged = getUsuarioLogado();
+    return usuario.idUsuario === userLogged.idUsuario;
+  }
 };
 
 export default withStyles(styles)(Mensagem);

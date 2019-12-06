@@ -3,13 +3,8 @@
  */
 const events = {
   NEW_USER: 'newUser',
-  USER_LOGGED_IN: 'userLoggedIn',
   USER_LOGGED_OFF: 'userLoggedOff',
-  USER_IS_TYPING: 'userIsTyping',
-  NEW_MESSAGE_SENDED: 'newMessageSended',
-  NEW_MESSAGE_RECEIVED: 'newMessageReceived',
-  ERROR: 'Error',
-  RESPONSE: 'Response'
+  NEW_MESSAGE_RECEIVED: 'newMessageReceived'
 };
 
 export default events;

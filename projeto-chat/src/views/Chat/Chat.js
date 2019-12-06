@@ -3,11 +3,19 @@ import { withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import backgroundImage from '../../assets/images/background-image.png';
 import Mensagem from '../../components/Mensagem/Mensagem';
-import moment from 'moment';
 import SendIcon from '@material-ui/icons/Send';
 import IconButton from '@material-ui/core/IconButton';
-import { onNewUserLogIn, onNewMessageReceived, sendNewMessage } from '../../resources/mensagem';
-import { getUserLogged } from '../../utils/usuario';
+import { getUsuarioLogado, deleteUsuarioLogado } from '../../utils/usuario';
+import ExitIcon from '@material-ui/icons/ExitToApp';
+import { VIEW_LOGIN_KEY } from '../../viewKeys';
+import { logoff } from '../../resources/usuario';
+import {
+  onNewUserLogIn,
+  onNewMessageReceived,
+  sendNewMessage,
+  findMessagesAfterDate,
+  onUserLogOut
+} from '../../resources/mensagem';
 
 const styles = () => ({
   root: {
@@ -53,93 +61,80 @@ const styles = () => ({
     bottom: 2,
     right: 0,
     color: '#0C8484'
+  },
+  containerExitButton: {
+    position: 'fixed',
+    top: 15,
+    right: 15,
+    zIndex: 2,
+    backgroundColor: '#ECE5DD',
+    borderRadius: '50%',
+    boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)'
   }
 });
-
-const dataMessages = [
-  {
-    tpMensagem: 0,
-    usuario: { idUsuario: 1, nmUsuario: 'Bruno Eduardo' },
-    text: 'Pão com sardinha é muito bom!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ')
-  },
-  {
-    tpMensagem: 0,
-    usuario: { idUsuario: 2, nmUsuario: 'Juliana Santos' },
-    text: 'Não concordo!',
-    dhEnvio: moment().format('YYYY-MM-DDTHH:mm:ssZZ')
-  }
-];
 
 /**
  * Componente que representa o Chat
  *
+ * @author Bruno Eduardo
  * @param {Object} props - props
  * @returns Componente React do Chat
  */
 const Chat = props => {
-  const { classes, onChangeView } = props; // TODO: implementar logoff
+  const { classes, onChangeView } = props;
 
   const [valueInput, setValueInput] = useState('');
-  const [mensagens, setMensagens] = useState(dataMessages || []);
+  const [mensagens, setMensagens] = useState([]);
+  const [componentMounted, setComponentMounted] = useState(false);
 
   const inputIsValid = !!valueInput && !!valueInput.trim() && valueInput.trim().length >= 1;
 
-  const idContainerScrollMessages = 'container-scroll-messages';
   useEffect(() => {
-    const element = document.getElementById(idContainerScrollMessages);
-    element && element.scrollTo(0, element.scrollHeight);
-  });
+    if (!componentMounted) setComponentMounted(true);
+
+    findMessagesAfterDate(getUsuarioLogado().dhCriacao).then(res => {
+      res.data.forEach(item => (item.tpMensagem = 0));
+      setMensagens(res.data);
+
+      moveScrollToBottom();
+    });
+  }, [componentMounted]);
 
   onNewUserLogIn().then(usuario => {
     const auxMensagens = [...mensagens];
-    auxMensagens.push({ tpMensagem: 1, usuario });
+    auxMensagens.push({ tpMensagem: 1, usuario, dsText: `${usuario.nmUsuario} entrou no chat.` });
     setMensagens(auxMensagens);
+
+    moveScrollToBottom();
+  });
+
+  onUserLogOut().then(usuario => {
+    const auxMensagens = [...mensagens];
+    auxMensagens.push({ tpMensagem: 1, usuario, dsText: `${usuario.nmUsuario} saiu no chat.` });
+    setMensagens(auxMensagens);
+
+    moveScrollToBottom();
   });
 
   onNewMessageReceived().then(mensagem => {
     const auxMensagens = [...mensagens];
-    console.log('new message received ', mensagem);
     auxMensagens.push({ tpMensagem: 0, ...mensagem });
     setMensagens(auxMensagens);
+
+    moveScrollToBottom();
   });
 
-  /**
-   * Manipula o evento de mudança do Input
-   *
-   * @param {*} e - Change event
-   */
-  function handleChangeInput(e) {
-    const value = e.target.value || '';
-    setValueInput(value);
-  }
-
-  /**
-   * Manipula o evento ao pressionar uma tecla
-   *
-   * @param {*} e - Keydown event
-   */
-  function handleKeyDownInput(e) {
-    if (e.keyCode === 13 && !e.shiftKey && inputIsValid) {
-      sendMessage();
-      e.preventDefault();
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Envia uma nova Mensagem
-   */
-  function sendMessage() {
-    sendNewMessage({ dsText: valueInput.trim(), usuario: getUserLogged() }).then(() =>
-      setValueInput('')
-    );
-  }
+  const idContainerScrollMessages = 'container-scroll-messages';
 
   return (
     <div className={classes.root}>
       <div className={classes.containerMessages}>
+        <div className={classes.containerExitButton}>
+          <IconButton onClick={logOff}>
+            <ExitIcon color='inherit' fontSize='large' />
+          </IconButton>
+        </div>
+
         <div id={idContainerScrollMessages} className={classes.containerScrollMessages}>
           {mensagens.map((msg, i) => (
             <Mensagem key={i} mensagem={msg} />
@@ -169,6 +164,58 @@ const Chat = props => {
       </div>
     </div>
   );
+
+  function moveScrollToBottom() {
+    const element = document.getElementById(idContainerScrollMessages);
+    element && element.scrollTo(0, element.scrollHeight);
+  }
+
+  /**
+   * Manipula o evento de mudança do Input
+   *
+   * @param {*} e - Change event
+   */
+  function handleChangeInput(e) {
+    const value = e.target.value || '';
+    setValueInput(value);
+  }
+
+  /**
+   * Manipula o evento ao pressionar uma tecla
+   *
+   * @param {*} e - Keydown event
+   */
+  function handleKeyDownInput(e) {
+    if (e.keyCode === 13 && !e.shiftKey && inputIsValid) {
+      sendMessage();
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Envia uma nova Mensagem
+   */
+  function sendMessage() {
+    sendNewMessage({ dsText: valueInput.trim(), usuario: getUsuarioLogado() }).then(() => {});
+    setValueInput('');
+  }
+
+  /**
+   * Desloga o Usuário
+   */
+  function logOff() {
+    logoff(getUsuarioLogado().idUsuario)
+      .then(() => {
+        deleteUsuarioLogado();
+        onChangeView(VIEW_LOGIN_KEY);
+      })
+      .catch(err => {
+        deleteUsuarioLogado();
+        onChangeView(VIEW_LOGIN_KEY);
+      });
+  }
 };
 
 export default withStyles(styles)(Chat);
