@@ -114,10 +114,12 @@ const Login = props => {
     if (inputIsInvalid) return;
 
     setLoading(true);
-    login({ nmUsuario }).then(res => {
-      setUsuarioLogado(res.data);
-      onChangeView(VIEW_CHAT_KEY);
-    });
+    login({ nmUsuario })
+      .then(res => {
+        setUsuarioLogado(res.data);
+        onChangeView(VIEW_CHAT_KEY);
+      })
+      .catch(err => setLoading(false));
   }
 
   /**
