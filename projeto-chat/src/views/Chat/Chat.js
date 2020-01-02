@@ -92,37 +92,45 @@ const Chat = props => {
   useEffect(() => {
     if (!componentMounted) setComponentMounted(true);
 
-    findMessagesAfterDate(getUsuarioLogado().dhCriacao).then(res => {
-      res.data.forEach(item => (item.tpMensagem = 0));
-      setMensagens(res.data);
+    findMessagesAfterDate(getUsuarioLogado().dhCriacao)
+      .then(res => {
+        res.data.forEach(item => (item.tpMensagem = 0));
+        setMensagens(res.data);
 
-      moveScrollToBottom();
-    });
+        moveScrollToBottom();
+      })
+      .catch(err => console.error('> Erro ao carregar mensagens\n', err));
   }, [componentMounted]);
 
-  onNewUserLogIn().then(usuario => {
-    const auxMensagens = [...mensagens];
-    auxMensagens.push({ tpMensagem: 1, usuario, dsText: `${usuario.nmUsuario} entrou no chat.` });
-    setMensagens(auxMensagens);
+  onNewUserLogIn()
+    .then(usuario => {
+      const auxMensagens = [...mensagens];
+      auxMensagens.push({ tpMensagem: 1, usuario, dsText: `${usuario.nmUsuario} entrou no chat.` });
+      setMensagens(auxMensagens);
 
-    moveScrollToBottom();
-  });
+      moveScrollToBottom();
+    })
+    .catch(err => console.error('> Erro ao carregar novo Usuário logado\n', err));
 
-  onUserLogOut().then(usuario => {
-    const auxMensagens = [...mensagens];
-    auxMensagens.push({ tpMensagem: 1, usuario, dsText: `${usuario.nmUsuario} saiu no chat.` });
-    setMensagens(auxMensagens);
+  onUserLogOut()
+    .then(usuario => {
+      const auxMensagens = [...mensagens];
+      auxMensagens.push({ tpMensagem: 1, usuario, dsText: `${usuario.nmUsuario} saiu no chat.` });
+      setMensagens(auxMensagens);
 
-    moveScrollToBottom();
-  });
+      moveScrollToBottom();
+    })
+    .catch(err => console.error('> Erro ao carregar Usuário deslogado\n', err));
 
-  onNewMessageReceived().then(mensagem => {
-    const auxMensagens = [...mensagens];
-    auxMensagens.push({ tpMensagem: 0, ...mensagem });
-    setMensagens(auxMensagens);
+  onNewMessageReceived()
+    .then(mensagem => {
+      const auxMensagens = [...mensagens];
+      auxMensagens.push({ tpMensagem: 0, ...mensagem });
+      setMensagens(auxMensagens);
 
-    moveScrollToBottom();
-  });
+      moveScrollToBottom();
+    })
+    .catch(err => console.error('> Erro ao carregar nova mensagem recebida\n', err));
 
   const idContainerScrollMessages = 'container-scroll-messages';
 
@@ -165,6 +173,9 @@ const Chat = props => {
     </div>
   );
 
+  /**
+   * Move o Scroll do chat para o final
+   */
   function moveScrollToBottom() {
     const element = document.getElementById(idContainerScrollMessages);
     element && element.scrollTo(0, element.scrollHeight);
@@ -198,7 +209,7 @@ const Chat = props => {
    * Envia uma nova Mensagem
    */
   function sendMessage() {
-    sendNewMessage({ dsText: valueInput.trim(), usuario: getUsuarioLogado() }).then(() => {});
+    sendNewMessage({ dsText: valueInput.trim(), usuario: getUsuarioLogado() });
     setValueInput('');
   }
 
@@ -206,15 +217,17 @@ const Chat = props => {
    * Desloga o Usuário
    */
   function logOff() {
+    /**
+     * Remove os dados do LocalStorage e muda a tela para a de Login
+     */
+    function callback() {
+      deleteUsuarioLogado();
+      onChangeView(VIEW_LOGIN_KEY);
+    }
+
     logoff(getUsuarioLogado().idUsuario)
-      .then(() => {
-        deleteUsuarioLogado();
-        onChangeView(VIEW_LOGIN_KEY);
-      })
-      .catch(err => {
-        deleteUsuarioLogado();
-        onChangeView(VIEW_LOGIN_KEY);
-      });
+      .then(callback)
+      .catch(callback);
   }
 };
 
