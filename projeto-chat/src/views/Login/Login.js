@@ -8,11 +8,11 @@ import { VIEW_CHAT_KEY } from '../../viewKeys';
 import { login } from '../../resources/usuario';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { setUsuarioLogado } from '../../utils/usuario';
+import { isMobile } from 'react-device-detect';
 
 const styles = () => ({
   root: {
     width: '100vw',
-    height: '100vh',
     backgroundColor: 'rgba(0,0,0,0.7)',
     display: 'flex',
     alignItems: 'center',
@@ -20,7 +20,7 @@ const styles = () => ({
   },
   paper: {
     minWidth: '50vw',
-    height: '60vh',
+    maxWidth: 'calc(100vw - 60px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -32,8 +32,10 @@ const styles = () => ({
     marginBottom: 30
   },
   text: {
-    fontSize: '1.28rem',
-    textAlign: 'center'
+    fontSize: '1.18rem',
+    textAlign: 'center',
+    marginLeft: 15,
+    marginRight: 15
   },
   containerButton: {
     width: '100%',
@@ -62,8 +64,12 @@ const Login = props => {
   const inputIsInvalid = !nmUsuario || nmUsuario.trim().length <= 3;
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper} elevation={12}>
+    <div className={classes.root} style={{ height: window.innerHeight }}>
+      <Paper
+        className={classes.paper}
+        style={{ height: (window.innerHeight * 60) / 100 }}
+        elevation={12}
+      >
         <Grid container>
           <Grid item xs className={classes.text}>
             Digite um nome para fazer login...
@@ -129,7 +135,7 @@ const Login = props => {
    * @returns {Boolean} true - se a tecla apertada dor o "Enter", o "Shift" não está pressionado e o Input é válido; senão, false;
    */
   function handleKeyDownInput(e) {
-    if (e.keyCode === 13 && !e.shiftKey && !inputIsInvalid) {
+    if (e.keyCode === 13 && (!e.shiftKey || isMobile) && !inputIsInvalid) {
       handleSubmit();
       e.preventDefault();
       return false;

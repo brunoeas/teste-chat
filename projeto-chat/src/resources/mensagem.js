@@ -1,7 +1,6 @@
 import { socket, URL_API } from './serverConnection';
 import events from './events';
 import axios from 'axios';
-import { formatDate } from '../utils/functions';
 
 const { NEW_USER, NEW_MESSAGE_RECEIVED, USER_LOGGED_OFF } = events;
 
@@ -47,14 +46,20 @@ async function sendNewMessage(mensagem) {
 }
 
 /**
- * Retorna as Mensagens enviadas depois da data passada por parâmetro
+ * Retorna as Mensagens enviadas depois da criação do Usuário passado por parâmetro
  *
  * @author Bruno Eduardo
- * @param {moment.MomentInput} date - Data para filtrar
+ * @param {Number} id - ID do Usuário para filtrar
  * @returns {Promise<Mensagem[]>} Uma Promise com as Mensagens filtradas
  */
-async function findMessagesAfterDate(date) {
-  return await axios.get(`${URL_API}/message/after-date/${formatDate(date)}`);
+async function findMessagesAfterUserCreation(id) {
+  return await axios.get(`${URL_API}/message/after-user-creation/${id}`);
 }
 
-export { onNewUserLogIn, onNewMessageReceived, sendNewMessage, findMessagesAfterDate, onUserLogOut };
+export {
+  onNewUserLogIn,
+  onNewMessageReceived,
+  sendNewMessage,
+  findMessagesAfterUserCreation,
+  onUserLogOut
+};

@@ -9,18 +9,20 @@ import { getUsuarioLogado, deleteUsuarioLogado } from '../../utils/usuario';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import { VIEW_LOGIN_KEY } from '../../viewKeys';
 import { logoff } from '../../resources/usuario';
+import { isMobile } from 'react-device-detect';
 import {
   onNewUserLogIn,
   onNewMessageReceived,
   sendNewMessage,
-  findMessagesAfterDate,
+  findMessagesAfterUserCreation,
   onUserLogOut
 } from '../../resources/mensagem';
 
 const styles = () => ({
   root: {
     width: '100vw',
-    height: '100vh'
+    height: window.innerHeight,
+    backgroundColor: '#363636'
   },
   containerInput: {
     height: 70,
@@ -31,7 +33,7 @@ const styles = () => ({
     backgroundColor: '#363636'
   },
   containerMessages: {
-    height: 'calc(100vh - 70px)',
+    height: `calc(${window.innerHeight}px - 70px)`,
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'contain',
     display: 'flex',
@@ -41,7 +43,7 @@ const styles = () => ({
     boxSizing: 'border-box'
   },
   containerScrollMessages: {
-    maxHeight: 'calc(100vh - 70px)',
+    maxHeight: `calc(${window.innerHeight}px - 70px)`,
     width: '100%',
     overflowY: 'auto',
     paddingBottom: 15,
@@ -92,7 +94,7 @@ const Chat = props => {
   useEffect(() => {
     if (!componentMounted) setComponentMounted(true);
 
-    findMessagesAfterDate(getUsuarioLogado().dhCriacao)
+    findMessagesAfterUserCreation(getUsuarioLogado().idUsuario)
       .then(res => {
         res.data.forEach(item => (item.tpMensagem = 0));
         setMensagens(res.data);
@@ -174,7 +176,7 @@ const Chat = props => {
   );
 
   /**
-   * Move o Scroll do chat para o final
+   * Move o Scroll do chat para o final da tela
    */
   function moveScrollToBottom() {
     const element = document.getElementById(idContainerScrollMessages);
@@ -197,7 +199,7 @@ const Chat = props => {
    * @param {*} e - Keydown event
    */
   function handleKeyDownInput(e) {
-    if (e.keyCode === 13 && !e.shiftKey && inputIsValid) {
+    if (e.keyCode === 13 && (!isMobile || !e.shiftKey) && inputIsValid) {
       sendMessage();
       e.preventDefault();
       return false;

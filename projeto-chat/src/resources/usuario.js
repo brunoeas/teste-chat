@@ -26,6 +26,7 @@ async function logoff(id) {
 /**
  * Retorna um Usuário pelo ID
  *
+ * @author Bruno Eduardo
  * @param {Number} id - ID do Usuário
  * @returns {Promise<Usuario>} Uma Promise com o Usuário
  */
