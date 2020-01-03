@@ -199,7 +199,7 @@ const Chat = props => {
    * @param {*} e - Keydown event
    */
   function handleKeyDownInput(e) {
-    if (e.keyCode === 13 && (!e.shiftKey || !isMobile) && inputIsValid) {
+    if (e.keyCode === 13 && (!isMobile || !e.shiftKey) && inputIsValid) {
       sendMessage();
       e.preventDefault();
       return false;
